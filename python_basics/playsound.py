@@ -2,18 +2,32 @@
 
 #wave_obj = sa.WaveObject.from_wave_file("BMR_Splash_1.wav")
 #play_obj = wave_obj.play()
+playSound = "dong"
 
-amount = int(input ("How many times do you want to play the sample? "))
+numPlaybackTimes = int(input ("How many times do you want to play the sample? "))
+list = []
 
 #play_obj.wait_done()
 
-playSound = "dong"
+# Add noteLength to each note
+for i in range(numPlaybackTimes):
+    noteLength = float(input ("Add duration in miliseconds "))
+    print(i,":", noteLength)
+    if i == (numPlaybackTimes-1):
+        print ("That was the last one! ")
+        bpm = 60000 / (int(input ("What is the bpm? ")))
+        print ("bpm in miliseconds: ", bpm)
 
-def playSample(amount):
-    if int(amount) == 0:
+# Multiply noteLength with bpm
+
+
+
+
+def playSample(numPlaybackTimes):
+    if int(numPlaybackTimes) == 0:
         return print ("finished")
     else:
         print (playSound)
-        return playSample(amount-1)
+        return playSample(numPlaybackTimes-1)
 
-playSample(amount)
+# playSample(numPlaybackTimes)
