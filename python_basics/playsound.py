@@ -29,29 +29,28 @@ Actual values are based on the BPM.
 # Input bpm and convert to seconds
 bpm = 60 / (float(input ("What is the bpm? ")))
 
+# Import list with note values from inputList.txt
+noteList = [line.rstrip('\r\n') for line in open('inputList.txt')]
+
+# Convert strings in list to float
+noteList = list(map(float,noteList))
+
 # Input number of repititions
-numPlaybackTimes = 0
-numPlaybackTimes = input ("How many times do you want to play the sample? ")
+numPlaybackTimes = len(noteList)
 
 # check if input was an integer, if not, repeat input
-while str.isdigit(numPlaybackTimes) == False:
-    numPlaybackTimes = input ("Heey vriendschap, das geen nummer hè. Doe ekkes gewoon een nummertje nu. ")
-else:
-    numPlaybackTimes = int(numPlaybackTimes)
-
-# Enter list with note values
-note_list = []
-
-for i in range(numPlaybackTimes):
-    note_list.append(float(input("Enter note values one by one: ")) * float(bpm))
+# while str.isdigit(numPlaybackTimes) == False:
+#     numPlaybackTimes = input ("Heey vriendschap, das geen nummer hè. Doe ekkes gewoon een nummertje nu. ")
+# else:
+#     numPlaybackTimes = int(numPlaybackTimes)
 
 # Play sound and repeat till numPlaybackTimes = 0 (forLoop)
 def playSample(numPlaybackTimes):
     for i in range(numPlaybackTimes):
         print (playSound)
-        time.sleep(note_list[i])
+        time.sleep(noteList[i]*bpm)
     if int(numPlaybackTimes) == 0:
-        return print ("finished")
+        print ("finished")
 
 # run playSample
 playSample(numPlaybackTimes)
