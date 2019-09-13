@@ -1,16 +1,19 @@
 # import simpleaudio as sa
 import time
 
+
 # wave_obj = sa.WaveObject.from_wave_file("BMR_Splash_1.wav")
 # play_obj = wave_obj.play()
 playSound = "dong"
 
 # play_obj.wait_done()
 
+# Program title
 print("<<<<<<<<<<<<<<<<<<<< BeatMachine >>>>>>>>>>>>>>>>>>>")
 
 time.sleep(1)
 
+# program introduction and instruction
 print("""....................... Index ......................
 Notevalues:
 4 = whole note;
@@ -27,7 +30,14 @@ Actual values are based on the BPM.
 bpm = 60 / (float(input ("What is the bpm? ")))
 
 # Input number of repititions
-numPlaybackTimes = int(input ("How many times do you want to play the sample? "))
+numPlaybackTimes = 0
+numPlaybackTimes = input ("How many times do you want to play the sample? ")
+
+# check if input was an integer, if not, repeat input
+while str.isdigit(numPlaybackTimes) == False:
+    numPlaybackTimes = input ("Heey vriendschap, das geen nummer hè. Doe ekkes gewoon een nummertje nu. ")
+else:
+    numPlaybackTimes = int(numPlaybackTimes)
 
 # Enter list with note values
 note_list = []
@@ -43,4 +53,5 @@ def playSample(numPlaybackTimes):
     if int(numPlaybackTimes) == 0:
         return print ("finished")
 
+# run playSample
 playSample(numPlaybackTimes)
