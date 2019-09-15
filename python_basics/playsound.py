@@ -1,6 +1,6 @@
 # import simpleaudio as sa
 import time
-
+import threading as th
 
 # wave_obj = sa.WaveObject.from_wave_file("BMR_Splash_1.wav")
 # play_obj = wave_obj.play()
@@ -9,7 +9,9 @@ playSound = "dong"
 # play_obj.wait_done()
 
 # Program title
+print("_____/<<<<<<<<<<<<<<<<<<<<|>>>>>>>>>>>>>>>>>>>\_____")
 print("<<<<<<<<<<<<<<<<<<<< BeatMachine >>>>>>>>>>>>>>>>>>>")
+print("\u203e\u203e\u203e\u203e\u203e\\<<<<<<<<<<<<<<<<<<<<|>>>>>>>>>>>>>>>>>>>/\u203e\u203e\u203e\u203e\u203e")
 
 time.sleep(0.5)
 
@@ -63,7 +65,20 @@ def playSample(numPlaybackTimes):
         print ("finished")
 
 # run playSample
-playSample(numPlaybackTimes)
+keep_going = True
+def key_capture_thread():
+    global keep_going
+    input()
+    keep_going = False
+
+def run_PlaySample():
+    th.Thread(target=key_capture_thread, args=(), name='key_capture_thread', daemon=True).start()
+    while keep_going:
+        playSample(numPlaybackTimes)
+
+run_PlaySample()
 
 # Closing comment
+print("_____/<<<<<<<<<<<<<<<<<<<<|>>>>>>>>>>>>>>>>>>>\_____")
 print("<<<<<<<<<<<<<<<<<<<< BeatMachine >>>>>>>>>>>>>>>>>>>")
+print("\u203e\u203e\u203e\u203e\u203e\\<<<<<<<<<<<<<<<<<<<<|>>>>>>>>>>>>>>>>>>>/\u203e\u203e\u203e\u203e\u203e")
