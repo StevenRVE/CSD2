@@ -11,7 +11,7 @@ playSound = "dong"
 # Program title
 print("<<<<<<<<<<<<<<<<<<<< BeatMachine >>>>>>>>>>>>>>>>>>>")
 
-time.sleep(1)
+time.sleep(0.5)
 
 # program introduction and instruction
 print("""....................... Index ......................
@@ -27,7 +27,23 @@ Actual values are based on the BPM.
 """)
 
 # Input bpm and convert to seconds
-bpm = 60 / (float(input ("What is the bpm? ")))
+bpmCorrect = False
+
+while (bpmCorrect == False):
+     try:
+         bpm = 60 / (float(input ("What is the bpm? ")))
+     except ValueError:
+         print("Wrong value. Try again: ")
+     except NameError:
+         print("That\'s not a number. Try again: ")
+     except TypeError:
+         print("I need a whole number please. Try again: ")
+     except Exception as e:
+         print("Something went wrong. ",e)
+         print("Try again: ")
+     else:
+         bpmCorrect = True
+         print("Thanks!")
 
 # Import list with note values from inputList.txt
 noteList = [line.rstrip('\r\n') for line in open('inputList.txt')]
@@ -37,12 +53,6 @@ noteList = list(map(float,noteList))
 
 # Input number of repititions
 numPlaybackTimes = len(noteList)
-
-# check if input was an integer, if not, repeat input
-# while str.isdigit(numPlaybackTimes) == False:
-#     numPlaybackTimes = input ("Heey vriendschap, das geen nummer hè. Doe ekkes gewoon een nummertje nu. ")
-# else:
-#     numPlaybackTimes = int(numPlaybackTimes)
 
 # Play sound and repeat till numPlaybackTimes = 0 (forLoop)
 def playSample(numPlaybackTimes):
@@ -54,3 +64,6 @@ def playSample(numPlaybackTimes):
 
 # run playSample
 playSample(numPlaybackTimes)
+
+# Closing comment
+print("<<<<<<<<<<<<<<<<<<<< BeatMachine >>>>>>>>>>>>>>>>>>>")
