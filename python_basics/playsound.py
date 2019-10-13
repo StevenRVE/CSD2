@@ -38,11 +38,13 @@ bpm = 120
 bpmCorrect = False
 
 # input function for bpm
-def ask_BPM(bpmCorrect):
+def ask_BPM():
     global bpm
+    global bpmCorrect
+
     while (bpmCorrect == False):
          try:
-             bpm = 60 / (float(input ("What is the bpm? ")))
+             bpm = (float(input ("What is the bpm? ")))
          except ValueError:
              print("Wrong value. Try again: ")
          except NameError:
@@ -54,7 +56,7 @@ def ask_BPM(bpmCorrect):
              print("Try again: ")
          else:
              bpmCorrect = True
-             print("Thanks!")
+             print("Thanks! The bpm is now: " + str(bpm))
 
 # Check if user wants to use preset bpm or input own bpm
 def change_BPM_yes_no(question, bpmCorrect, default="yes"):
@@ -76,21 +78,22 @@ def change_BPM_yes_no(question, bpmCorrect, default="yes"):
     elif default == "no":
         prompt = " [y/N] "
     else:
-        raise ValueError('invalid default answer: '%s'' % default)
+        raise ValueError("invalid default answer: '%s'" % default)
 
     while True:
         sys.stdout.write(question + prompt)
         choice = input().lower()
         if default is not None and choice == "":
+            print("The default bpm is %d" % bpm)
             return valid[default]
         elif (choice in valid) == True:
+            ask_BPM()
             return valid[choice]
         else:
-            sys.stdout.write("Please respond with "yes" or "no" "
-                             "(or "y" or "n").\n")
+            sys.stdout.write("Please respond with 'yes' or 'no' "
+                             "(or 'y' or 'n').\n")
 
 change_BPM_yes_no("Do you want to use the default BPM? ", bpmCorrect)
-print(bpm)
 
 # convert bpm to notelengths in seconds
 quarterNoteDuration = 60 / bpm
@@ -128,8 +131,68 @@ for stamp in timestamps:
 dictListBank = dictList.copy()
 
 # input the amount of times that the sequence has to be looped
-loopTimes = int(input("How often do you want to play the sequence? "))
+loopTimes = 4
 loopedTimes = 0
+loopTimesCorrect = False
+
+# input function for loopTimes
+def ask_loopTimes():
+    global loopTimes
+    global loopTimesCorrect
+
+    while (loopTimesCorrect == False):
+         try:
+             bpm = (float(input ("How many times must I play the loop? ")))
+         except ValueError:
+             print("Wrong value. Try again: ")
+         except NameError:
+             print("That\"s not a number. Try again: ")
+         except TypeError:
+             print("I need a whole number please. Try again: ")
+         except Exception as e:
+             print("Something went wrong. ",e)
+             print("Try again: ")
+         else:
+             loopTimesCorrect = True
+             print("Thanks! I'm gonna play it " + str(bpm) + "times.")
+
+
+# Check if user wants to use preset bpm or input own bpm
+def change_loopTimes_yes_no(question, loopTimesCorrect, default="yes"):
+    """Ask a yes/no question via input() and return their answer.
+
+    "question" is a string that is presented to the user.
+    "default" is the presumed answer if the user just hits <Enter>.
+        It must be "yes" (the default), "no" or None (meaning
+        an answer is required of the user).
+
+    The "answer" return value is True for "yes" or False for "no".
+    """
+    valid = {"yes": True, "y": True, "ye": True,
+             "no": False, "n": False}
+    if default is None:
+        prompt = " [y/n] "
+    elif default == "yes":
+        prompt = " [Y/n] "
+    elif default == "no":
+        prompt = " [y/N] "
+    else:
+        raise ValueError("invalid default answer: '%s'" % default)
+
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = input().lower()
+        if default is not None and choice == "":
+            print("The default loop number is %d" % loopTimes)
+            return valid[default]
+        elif (choice in valid) == True:
+            ask_loopTimes()
+            return valid[choice]
+        else:
+            sys.stdout.write("Please respond with 'yes' or 'no' "
+                             "(or 'y' or 'n').\n")
+
+change_loopTimes_yes_no("Do you want to use the default loop number? ", loopTimesCorrect)
 
 def playSequence():
     for i in range(loopTimes):
