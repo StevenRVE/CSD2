@@ -116,26 +116,74 @@ change_BPM_yes_no("Do you want to use the default BPM? ", bpmCorrect)
 
 # convert bpm to notelengths in seconds
 quarterNoteDuration = 60 / bpm
+eightNoteDuration = quarterNoteDuration / 2.0
 sixteenthNoteDuration = quarterNoteDuration / 4.0
 
 # create a list to hold the timestamps
 timestamps = []
 
-##### import presets #####
-# # Import list with note values from inputList.txt
-# noteList = [line.rstrip('\r\n') for line in open('inputList.txt')]
-#
-# # Convert strings in list to float
-# noteList = list(map(float,noteList))
-
 # create a list with "note timestamps" specified as 16th notes, indicating
 # the time at which the sample must be played
-timestamps16th = [0,3,4,6,9,10,13,15,17]
-# timestamps16th = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]
+timestamps16th = []
 
-# transform the sixteenthTimestamps to a timestamps list with time values
+# ask user what rythm he wants to use
+def inputRythm():
+    global timestamps16th
+    global rythmCorrect
+    global noteDuration
+
+    rythmCorrect = False
+    validNumerator = {4,8,16}
+
+    while (rythmCorrect == False):
+         try:
+             denominator = (int(input ("What is the denominator? ")))
+             numerator = (int(input("What is the numerator? Choose between 4, 8 or 16. ")))
+             zeroCheckDen = 1/denominator
+             zeroCheckNum = 1/numerator
+         except ValueError:
+             print("Wrong value. Try again: ")
+         except NameError:
+             print("That\"s not a number. Try again: ")
+         except TypeError:
+             print("I need a whole number please. Try again: ")
+         except ZeroDivisionError:
+             print("Can't be zero. Try again: ")
+         except Exception as e:
+             print("Something went wrong. ",e)
+             print("Try again: ")
+         else:
+             if denominator < 0:
+                 bpm = bpm * -1
+                 print("""I don't think a negative value would be usefull, let me fix that.""")
+             if numerator < 0:
+                 bpm = bpm * -1
+                 print("""I don't think a negative value would be usefull, let me fix that.""")
+             if (numerator in validNumerator) == False:
+                 rythmCorrect = False
+                 print("Choose either 4, 8 or 16. Try again: ")
+             rythmCorrect = True
+             print("The rythm is now: " + str(denominator) + "/" + str(numerator))
+
+    if numerator == 4:
+        # denominator = denominator * 4
+        noteDuration = quarterNoteDuration
+
+    if numerator == 8:
+        # denominator = denominator * 2
+        noteDuration = eightNoteDuration
+
+    if numerator == 16:
+        noteDuration = sixteenthNoteDuration
+
+    for sixteenthNotes in range(0, denominator):
+        timestamps16th.append(sixteenthNotes)
+
+inputRythm()
+
+# transform the noteTimestamps to a timestamps list with time values
 for timestamp in timestamps16th:
-  timestamps.append(timestamp * sixteenthNoteDuration)
+  timestamps.append(timestamp * noteDuration)
 
 dictList = []
 
@@ -146,7 +194,7 @@ for stamp in timestamps:
     "instrument": random.randint(0, 2),
     "chanceHihat": random.randint(0,100),
     "chanceKick": random.randint(0,100),
-    "chanceSnare": random.randint(0,100),
+    "chanceSnare": random.randint(0,100)
     }
     dictList.append(stamp)
 
@@ -164,7 +212,7 @@ mf = MIDIFile(1)     # only 1 track
 track    = 0
 channel  = 10
 time     = 0   # In beats
-duration = 1   # In beats
+duration = 0.25   # In beats
 tempo    = bpm  # In BPM
 volume   = 100 # 0-127, as per the MIDI standard
 
@@ -173,6 +221,68 @@ mf.addTrackName(track, time, "Sample Track")
 mf.addTempo(track, time, 120)
 
 ###################################USER-INPUT###################################
+algorythm = 1
+chosenAlgorythm = 1
+# set chances for kick or snare to be played
+chanceKickNumber = 50
+chanceSnareNumber = 50
+
+# beat randomness algorythm
+def chooseAlgorythm():
+    global algorythm
+    global chosenAlgorythm
+    global groupNumber
+    global algorythmCorrect
+
+    algorythmCorrect = False
+    valid = {1,2,3,4}
+
+    print("""
+    You can choose between 3 different.
+    Algorythm 1: more chance of kick on quarter notes and snares in between
+    the quarter notes
+    Algorythm 2: triplet feel
+    Algorythm 3: waltz dance feel
+    Algorythm 4: complete randomness
+    """)
+
+    while (algorythmCorrect == False):
+         try:
+             chosenAlgorythm = int(input("Enter the number of the algorythm you want to use: "))
+             zeroCheck = 1/chosenAlgorythm
+         except ValueError:
+             print("Wrong value. Try again: ")
+         except NameError:
+             print("That\"s not a number. Try again: ")
+         except TypeError:
+             print("I need a whole number please. Try again: ")
+         except ZeroDivisionError:
+             print("Algorythm can't be zero. Try again: ")
+         except Exception as e:
+             print("Something went wrong. ",e)
+             print("Try again: ")
+         else:
+             if chosenAlgorythm < 0:
+                 chosenAlgorythm = chosenAlgorythm * -1
+                 print("I don't think a negative value would be usefull. Let me fix that.")
+             if (chosenAlgorythm in valid) == False:
+                 algorythmCorrect = False
+                 print("Choose either 1, 2, 3 or 4. Try again: ")
+             else:
+                 algorythmCorrect = True
+                 print("You've chosen algorythm " + str(chosenAlgorythm))
+
+    if chosenAlgorythm == 1:
+        groupNumber = 4
+    if chosenAlgorythm == 2:
+        groupNumber = 3
+    if chosenAlgorythm == 3:
+        groupNumber = 6
+    if chosenAlgorythm == 4:
+        # volledig random
+        print("You choose algorythm 4")
+
+chooseAlgorythm()
 
 # input the amount of times that the sequence has to be looped
 loopTimes = 4
@@ -291,11 +401,11 @@ def writeMidi(question, default="no"):
         elif (choice in valid) == True:
             if valid[choice] == True:
                 # write it to disk
+                print("writing to midi file")
                 with open("drumloop.mid", 'wb') as output_file:
                     mf.writeFile(output_file)
-                    return
-            if valid[choice] == False:
                 return
+
         else:
             sys.stdout.write("Please respond with 'yes' or 'no' "
                              "(or 'y' or 'n').\n")
@@ -313,13 +423,15 @@ def playSequence():
         global loopedTimes
         global dictList
         global keep_going
+        global chanceHihat
+        global chanceKick
+        global chanceSnare
+        global groupNumber
+        global noteDuration
 
         loopedTimes = loopedTimes + 1
         # retrieve the startime: current time
         startTime = tm.time()
-
-        # get a random value to be used as sample index
-        randomIndex = random.randint(0, 2)
 
         # get information from dictionary
         dictionary = dictList.pop(0)
@@ -329,10 +441,6 @@ def playSequence():
         chanceKick = dictionary["chanceKick"]
         chanceSnare = dictionary["chanceSnare"]
 
-        # set chances for kick or snare to be played
-        chanceKickNumber = 50
-        chanceSnareNumber = 40
-
         # play the sequence
         while True:
             # retrieve current time
@@ -341,17 +449,110 @@ def playSequence():
             # check whether the current time is beyond the timestamp"s time,
             # meaning it is time to play the sample
             if((currentTime - startTime)  >= timestamp):
-                if timestamp == 0:
-                    chanceKickNumber = 85
-                if chanceHihat < 70:
-                    samples[0].play()
-                    mf.addNote(track, channel, 62, timestamp, duration, volume)
-                if chanceKick < chanceKickNumber:
-                    samples[1].play()
-                    mf.addNote(track, channel, 60, timestamp, duration, volume)
-                if chanceSnare < chanceSnareNumber:
-                    samples[2].play()
-                    mf.addNote(track, channel, 64, timestamp, duration, volume)
+                # algorythm(chosenAlgorythm)
+                # algorythm 1
+                if chosenAlgorythm == 1:
+                    # quarter notes
+                    if timestamp % groupNumber == 0:
+                        if chanceHihat < 50:
+                            samples[0].play()
+                            mf.addNote(track, channel, 62, timestamp, duration, volume)
+                        if chanceKick - 30 < chanceKickNumber:
+                            samples[1].play()
+                            mf.addNote(track, channel, 60, timestamp, duration, volume)
+                        if chanceSnare + 30 < chanceSnareNumber:
+                            samples[2].play()
+                            mf.addNote(track, channel, 64, timestamp, duration, volume)
+                    # in between quarter notes
+                    elif (timestamp + (groupNumber / 2)) % groupNumber == 0:
+                        if chanceHihat < 40:
+                            samples[0].play()
+                            mf.addNote(track, channel, 62, timestamp, duration, volume)
+                        if (chanceKick + 20) < chanceKickNumber:
+                            samples[1].play()
+                            mf.addNote(track, channel, 60, timestamp, duration, volume)
+                        if (chanceSnare - 20) < chanceSnareNumber:
+                            samples[2].play()
+                            mf.addNote(track, channel, 64, timestamp, duration, volume)
+                    # leftover sixteenth notes
+                    else:
+                        if chanceHihat < 60:
+                            samples[0].play()
+                            mf.addNote(track, channel, 62, timestamp, duration, volume)
+                        if chanceKick + 35 < chanceKickNumber:
+                            samples[1].play()
+                            mf.addNote(track, channel, 60, timestamp, duration, volume)
+                        if chanceSnare + 35 < chanceSnareNumber:
+                            samples[2].play()
+                            mf.addNote(track, channel, 64, timestamp, duration, volume)
+                if chosenAlgorythm == 2:
+                    # triplets
+                    if timestamp % groupNumber == 0:
+                        if chanceHihat < 50:
+                            samples[0].play()
+                            mf.addNote(track, channel, 62, timestamp, duration, volume)
+                        if chanceKick - 40 < chanceKickNumber:
+                            samples[1].play()
+                            mf.addNote(track, channel, 60, timestamp, duration, volume)
+                        if chanceSnare < chanceSnareNumber:
+                            samples[2].play()
+                            mf.addNote(track, channel, 64, timestamp, duration, volume)
+                    # leftover sixteenth notes
+                    else:
+                        if chanceHihat < 70:
+                            samples[0].play()
+                            mf.addNote(track, channel, 62, timestamp, duration, volume)
+                        if chanceKick + 40 < chanceKickNumber:
+                            samples[1].play()
+                            mf.addNote(track, channel, 60, timestamp, duration, volume)
+                        if chanceSnare + 40 < chanceSnareNumber:
+                            samples[2].play()
+                            mf.addNote(track, channel, 64, timestamp, duration, volume)
+                if chosenAlgorythm == 3:
+                    # first triplet
+                    if timestamp % groupNumber == 0:
+                        if chanceHihat < 70:
+                            samples[0].play()
+                            mf.addNote(track, channel, 62, timestamp, duration, volume)
+                        if chanceKick - 40 < chanceKickNumber:
+                            samples[1].play()
+                            mf.addNote(track, channel, 60, timestamp, duration, volume)
+                        if chanceSnare + 40 < chanceSnareNumber:
+                            samples[2].play()
+                            mf.addNote(track, channel, 64, timestamp, duration, volume)
+                    # second triplet
+                    elif (timestamp + (groupNumber / 2)) % groupNumber == 0:
+                        if chanceHihat < 40:
+                            samples[0].play()
+                            mf.addNote(track, channel, 62, timestamp, duration, volume)
+                        if (chanceKick + 40) < chanceKickNumber:
+                            samples[1].play()
+                            mf.addNote(track, channel, 60, timestamp, duration, volume)
+                        if (chanceSnare - 40) < chanceSnareNumber:
+                            samples[2].play()
+                            mf.addNote(track, channel, 64, timestamp, duration, volume)
+                    # leftover sixteenth notes
+                    else:
+                        if chanceHihat < 80:
+                            samples[0].play()
+                            mf.addNote(track, channel, 62, timestamp, duration, volume)
+                        if chanceKick + 35 < chanceKickNumber:
+                            samples[1].play()
+                            mf.addNote(track, channel, 60, timestamp, duration, volume)
+                        if chanceSnare + 35 < chanceSnareNumber:
+                            samples[2].play()
+                            mf.addNote(track, channel, 64, timestamp, duration, volume)
+                if chosenAlgorythm == 4:
+                    # all sixteenth notes random
+                    if chanceHihat < 60:
+                        samples[0].play()
+                        mf.addNote(track, channel, 62, timestamp, duration, volume)
+                    if chanceKick < chanceKickNumber:
+                        samples[1].play()
+                        mf.addNote(track, channel, 60, timestamp, duration, volume)
+                    if chanceSnare < chanceSnareNumber:
+                        samples[2].play()
+                        mf.addNote(track, channel, 64, timestamp, duration, volume)
 
                 # if there are timestamps left in the timestamps list
                 if dictList:
@@ -368,7 +569,7 @@ def playSequence():
                     # reset startTime
                     startTime = tm.time()
                     print("Sequence done. ")
-                    tm.sleep(sixteenthNoteDuration)
+                    tm.sleep(noteDuration)
                     break
 
             else:
