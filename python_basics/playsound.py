@@ -4,6 +4,7 @@ import simpleaudio as sa
 import sys
 import threading as th
 import time as tm
+import math
 
 # Define instrument
 samples = [sa.WaveObject.from_wave_file("samples/16_bit/Hihat.wav"),
@@ -19,7 +20,7 @@ tm.sleep(0.5)
 
 # program introduction and instruction
 print("""
-             Welcome to the BietMeister!
+             Welcome to the BietMachine!
 
 """)
 
@@ -53,12 +54,15 @@ def ask_BPM():
     while (bpmCorrect == False):
          try:
              bpm = (float(input ("What is the bpm? ")))
+             zeroCheck = 1/bpm
          except ValueError:
              print("Wrong value. Try again: ")
          except NameError:
              print("That\"s not a number. Try again: ")
          except TypeError:
              print("I need a whole number please. Try again: ")
+         except ZeroDivisionError:
+             print("Bpm can't be zero. Try again: ")
          except Exception as e:
              print("Something went wrong. ",e)
              print("Try again: ")
@@ -98,8 +102,12 @@ def change_BPM_yes_no(question, bpmCorrect, default="yes"):
             print("The default bpm is %d" % bpm)
             return valid[default]
         elif (choice in valid) == True:
-            ask_BPM()
-            return valid[choice]
+            if valid[choice] == True:
+                print("The default bpm is %d" % bpm)
+                return
+            if valid[choice] == False:
+                ask_BPM()
+                return
         else:
             sys.stdout.write("Please respond with 'yes' or 'no' "
                              "(or 'y' or 'n').\n")
@@ -139,8 +147,6 @@ for stamp in timestamps:
     "chanceHihat": random.randint(0,100),
     "chanceKick": random.randint(0,100),
     "chanceSnare": random.randint(0,100),
-    "pitch": [],
-    "time": stamp
     }
     dictList.append(stamp)
 
@@ -151,52 +157,20 @@ dictListBank = dictList.copy()
 dictionaryMidiBank = dictList.copy()
 
 ######################################MIDI######################################
-# # create your MIDI object
-# mf = MIDIFile(1)     # only 1 track
-#
-# # set default values
-# track    = 0
-# channel  = 0
-# time     = 0   # In beats
-# duration = 1   # In beats
-# tempo    = 60  # In BPM
-# volume   = 100 # 0-127, as per the MIDI standard
-#
-# time = 0    # start at the beginning
-# mf.addTrackName(track, time, "Sample Track")
-# mf.addTempo(track, time, 120)
-#
-# #####HIHAT#####
-# pitch = 60
-# mf.addTrackName(track, time, "hihat")
-#
-# # put notes for hihat in midifile
-# for notes in dictList:
-#     dictionaryMidi = dictionaryMidiBank.pop(0)
-#     if dictionaryMidi["chanceHihat"] < 70:
-#         mf.addNote(track, channel, pitch, time, duration, volume)
+# create your MIDI object
+mf = MIDIFile(1)     # only 1 track
 
-# #####KICK#####
-# time = 0
-# mf.addTrackName(track, time, "kick")
-#
-# # put notes for kicks in midifile
-# for notes in dictList:
-#     if dictionary["chanceKick"] < 50:
-#         mf.addNote(track, channel, pitch, time, duration, volume)
-#
-# #####SNARE#####
-# time = 0
-# mf.addTrackName(track, time, "snare")
-#
-# # put notes for snares in midifile
-# for notes in dictList:
-#     if dictionary["chanceSnare"] < 40:
-#         mf.addNote(track, channel, pitch, time, duration, volume)
+# set default values
+track    = 0
+channel  = 10
+time     = 0   # In beats
+duration = 1   # In beats
+tempo    = bpm  # In BPM
+volume   = 100 # 0-127, as per the MIDI standard
 
-# # write it to disk
-# with open("hihat.mid", 'wb') as output_file:
-#     mf.writeFile(output_file)
+time = 0    # start at the beginning
+mf.addTrackName(track, time, "Sample Track")
+mf.addTempo(track, time, 120)
 
 ###################################USER-INPUT###################################
 
@@ -213,12 +187,15 @@ def ask_loopTimes():
     while (loopTimesCorrect == False):
          try:
              loopTimes = (int(input ("How many times must I play the loop? ")))
+             zeroCheck =  1/loopTimes
          except ValueError:
              print("Wrong value. Try again: ")
          except NameError:
              print("That\"s not a number. Try again: ")
          except TypeError:
              print("I need a whole number please. Try again: ")
+         except ZeroDivisionError:
+             print("Please pick a number higher than zero: ")
          except Exception as e:
              print("Something went wrong. ",e)
              print("Try again: ")
@@ -229,7 +206,7 @@ def ask_loopTimes():
              loopTimesCorrect = True
              print("I'm gonna play it " + str(loopTimes) + " times.")
 
-# Check if user wants to use preset loopTimes or input own loopTimes
+# Function for looptimes default or user input
 def change_loopTimes_yes_no(question, loopTimesCorrect, default="yes"):
     valid = {"yes": True, "y": True, "ye": True,
              "no": False, "n": False}
@@ -249,13 +226,17 @@ def change_loopTimes_yes_no(question, loopTimesCorrect, default="yes"):
             print("The default loop number is %d" % loopTimes)
             return valid[default]
         elif (choice in valid) == True:
-            ask_loopTimes()
-            return valid[choice]
+            if valid[choice] == True:
+                print("The default loop number is %d" % loopTimes)
+                return
+            if valid[choice] == False:
+                ask_loopTimes()
+                return
         else:
             sys.stdout.write("Please respond with 'yes' or 'no' "
                              "(or 'y' or 'n').\n")
 
-# Check if user wants to replay the loop
+# Function for looptimes default or user input
 def replay_loop_yes_no(question, default="yes"):
     valid = {"yes": True, "y": True, "ye": True,
              "no": False, "n": False}
@@ -272,21 +253,61 @@ def replay_loop_yes_no(question, default="yes"):
         sys.stdout.write(question + prompt)
         choice = input().lower()
         if default is not None and choice == "":
-            return valid[default]
-        elif (choice in valid) == True:
             global keep_going
             keep_going = True
             playSequence()
-            return valid[choice]
+            return valid[default]
+        elif (choice in valid) == True:
+            if valid[choice] == True:
+                keep_going = True
+                playSequence()
+                return
+            if valid[choice] == False:
+                global replay
+                replay = False
+                return
         else:
             sys.stdout.write("Please respond with 'yes' or 'no' "
                              "(or 'y' or 'n').\n")
 
+# Function for asking to write midi file or not
+def writeMidi(question, default="no"):
+    valid = {"yes": True, "y": True, "ye": True,
+             "no": False, "n": False}
+    if default is None:
+        prompt = " [y/n] "
+    elif default == "yes":
+        prompt = " [Y/n] "
+    elif default == "no":
+        prompt = " [y/N] "
+    else:
+        raise ValueError("invalid default answer: '%s'" % default)
+
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = input().lower()
+        if default is not None and choice == "":
+            return
+        elif (choice in valid) == True:
+            if valid[choice] == True:
+                # write it to disk
+                with open("drumloop.mid", 'wb') as output_file:
+                    mf.writeFile(output_file)
+                    return
+            if valid[choice] == False:
+                return
+        else:
+            sys.stdout.write("Please respond with 'yes' or 'no' "
+                             "(or 'y' or 'n').\n")
+
+# Check if user wants to use preset loopTimes or input own loopTimes
 change_loopTimes_yes_no("Do you want to use the default loop number? ",
 loopTimesCorrect)
 
+# make sure the sequence keeps going till number of loops is reached
 keep_going = True
 
+# function for playing the sequence
 def playSequence():
     for i in range(loopTimes):
         global loopedTimes
@@ -308,6 +329,10 @@ def playSequence():
         chanceKick = dictionary["chanceKick"]
         chanceSnare = dictionary["chanceSnare"]
 
+        # set chances for kick or snare to be played
+        chanceKickNumber = 50
+        chanceSnareNumber = 40
+
         # play the sequence
         while True:
             # retrieve current time
@@ -316,12 +341,17 @@ def playSequence():
             # check whether the current time is beyond the timestamp"s time,
             # meaning it is time to play the sample
             if((currentTime - startTime)  >= timestamp):
+                if timestamp == 0:
+                    chanceKickNumber = 85
                 if chanceHihat < 70:
                     samples[0].play()
-                if chanceKick < 50:
+                    mf.addNote(track, channel, 62, timestamp, duration, volume)
+                if chanceKick < chanceKickNumber:
                     samples[1].play()
-                if chanceSnare < 40:
+                    mf.addNote(track, channel, 60, timestamp, duration, volume)
+                if chanceSnare < chanceSnareNumber:
                     samples[2].play()
+                    mf.addNote(track, channel, 64, timestamp, duration, volume)
 
                 # if there are timestamps left in the timestamps list
                 if dictList:
@@ -349,11 +379,19 @@ def playSequence():
     if (loopedTimes - loopTimes == 0):
         keep_going = False
 
+# play the sequence
 playSequence()
 
-while keep_going == False:
-    replay_loop_yes_no("Do you want to replay the loop? ")
+#############################POST-PLAYING-FUNCTIONS#############################
 
+# Ask if midi file should be written
+writeMidi("Do you want to save this beat as a MIDIfile?")
+
+# while loop for replaying the same sequence
+replay = True
+
+while replay == True:
+    replay_loop_yes_no("Do you want to replay the loop? ")
 
 # Closing comment
 print("_____/<<<<<<<<<<<<<<<<<<<<|>>>>>>>>>>>>>>>>>>>\_____")
