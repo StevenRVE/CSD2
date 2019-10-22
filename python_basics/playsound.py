@@ -13,7 +13,7 @@ samples = [sa.WaveObject.from_wave_file("samples/16_bit/Hihat.wav"),
 
 # Program title
 print("_____/<<<<<<<<<<<<<<<<<<<<|>>>>>>>>>>>>>>>>>>>\_____")
-print("<<<<<<<<<<<<<<<<<<<< BietMeister >>>>>>>>>>>>>>>>>>>")
+print("<<<<<<<<<<<<<<<<<<<< BietMachine >>>>>>>>>>>>>>>>>>>")
 print("\u203e\u203e\u203e\u203e\u203e\\<<<<<<<<<<<<<<<<<<<<|>>>>>>>>>>>>>>>>>>>/\u203e\u203e\u203e\u203e\u203e")
 
 tm.sleep(0.5)
@@ -33,6 +33,15 @@ print(""" ___________________________________________________
 |and number of repeats. Or you can take control and|
 |enter those settings yourself. If you do, make    |
 |sure to enter in numbers like 1, 10, 100, etc.    |
+|You can also choose what kind of rythm and        |
+|algorythm for beat generation you want to use.    |
+|                                                  |
+|When a default option is available, the default   |
+|will be an upper case letter.                     |
+|                                                  |
+|                     Example:                     |
+|          Is this an example? [Y/n]               |
+|    Default answer (by pressing ENTER) is Yes.    |
 |                                                  |
 |                    Have fun!                     |
 |__________________________________________________|
@@ -41,12 +50,16 @@ print(""" ___________________________________________________
 
 tm.sleep(1)
 
+#####################################-BPM-######################################
+
+print("#######################-BPM-########################")
+
 # Input default bpm convert to seconds
 bpm = 120
 
 bpmCorrect = False
 
-# input function for bpm
+# input function for bpm with error handling
 def ask_BPM():
     global bpm
     global bpmCorrect
@@ -114,6 +127,8 @@ def change_BPM_yes_no(question, bpmCorrect, default="yes"):
 
 change_BPM_yes_no("Do you want to use the default BPM? ", bpmCorrect)
 
+#################################-NOTEDURATION-#################################
+
 # convert bpm to notelengths in seconds
 quarterNoteDuration = 60 / bpm
 eightNoteDuration = quarterNoteDuration / 2.0
@@ -126,7 +141,9 @@ timestamps = []
 # the time at which the sample must be played
 timestamps16th = []
 
-# ask user what rythm he wants to use
+print("######################-RYTHM-#######################")
+
+# ask user what rythm he wants to use with error handling
 def inputRythm():
     global timestamps16th
     global rythmCorrect
@@ -134,6 +151,8 @@ def inputRythm():
 
     rythmCorrect = False
     validNumerator = {4,8,16}
+
+
 
     while (rythmCorrect == False):
          try:
@@ -154,16 +173,18 @@ def inputRythm():
              print("Try again: ")
          else:
              if denominator < 0:
-                 bpm = bpm * -1
+                 denominator = denominator * -1
                  print("""I don't think a negative value would be usefull, let me fix that.""")
              if numerator < 0:
-                 bpm = bpm * -1
+                 numerator = numerator * -1
                  print("""I don't think a negative value would be usefull, let me fix that.""")
              if (numerator in validNumerator) == False:
                  rythmCorrect = False
                  print("Choose either 4, 8 or 16. Try again: ")
-             rythmCorrect = True
-             print("The rythm is now: " + str(denominator) + "/" + str(numerator))
+             if (numerator in validNumerator) == True:
+                 rythmCorrect = True
+                 print("The rythm is now: " + str(denominator) + "/" + str(numerator))
+
 
     if numerator == 4:
         # denominator = denominator * 4
@@ -187,7 +208,7 @@ for timestamp in timestamps16th:
 
 dictList = []
 
-# create dictionarys from timestamps and add random samples
+# create dictionarys from timestamps and add random values for samples
 for stamp in timestamps:
     stamp = {
     "timestamp": stamp,
@@ -204,7 +225,7 @@ dictListBank = dictList.copy()
 # copy dictList into new list for later re-copy
 dictionaryMidiBank = dictList.copy()
 
-######################################MIDI######################################
+#####################################-MIDI-#####################################
 # create your MIDI object
 mf = MIDIFile(1)     # only 1 track
 
@@ -220,12 +241,46 @@ time = 0    # start at the beginning
 mf.addTrackName(track, time, "Sample Track")
 mf.addTempo(track, time, 120)
 
-###################################USER-INPUT###################################
+# Function for asking to write midi file or not
+def writeMidi(question, default="no"):
+    valid = {"yes": True, "y": True, "ye": True,
+             "no": False, "n": False}
+    if default is None:
+        prompt = " [y/n] "
+    elif default == "yes":
+        prompt = " [Y/n] "
+    elif default == "no":
+        prompt = " [y/N] "
+    else:
+        raise ValueError("invalid default answer: '%s'" % default)
+
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = input().lower()
+        if default is not None and choice == "":
+            return
+        elif (choice in valid) == True:
+            if valid[choice] == True:
+                # write it to disk
+                print("writing to midi file")
+                with open("drumloop.mid", 'wb') as output_file:
+                    mf.writeFile(output_file)
+                return
+            if valid[choice] == False:
+                return
+
+        else:
+            sys.stdout.write("Please respond with 'yes' or 'no' "
+                             "(or 'y' or 'n').\n")
+
+##################################-ALGORYTHM-###################################
 algorythm = 1
 chosenAlgorythm = 1
 # set chances for kick or snare to be played
 chanceKickNumber = 50
 chanceSnareNumber = 50
+
+print("####################-ALGORYTHM-#####################")
 
 # beat randomness algorythm
 def chooseAlgorythm():
@@ -237,14 +292,19 @@ def chooseAlgorythm():
     algorythmCorrect = False
     valid = {1,2,3,4}
 
-    print("""
-    You can choose between 3 different.
-    Algorythm 1: more chance of kick on quarter notes and snares in between
-    the quarter notes
-    Algorythm 2: triplet feel
-    Algorythm 3: waltz dance feel
-    Algorythm 4: complete randomness
-    """)
+    print(""" ___________________________________________________
+|................... Algorythm ....................|
+|  You can choose between 4 different algorythms:  |
+|                                                  |
+|  Algorythm 1: higher chance of kicks on quarter  |
+|    notes and snares in between quarter notes     |
+|  Algorythm 2: triplet feel                       |
+|  Algorythm 3: waltz dance feel                   |
+|  Algorythm 4: complete randomness                |
+|                                                  |
+|    Choose a algorythm by typing it's number      |
+|__________________________________________________|
+""")
 
     while (algorythmCorrect == False):
          try:
@@ -284,10 +344,14 @@ def chooseAlgorythm():
 
 chooseAlgorythm()
 
+##################################-LOOPTIMES-###################################
+
 # input the amount of times that the sequence has to be looped
 loopTimes = 4
 loopedTimes = 0
 loopTimesCorrect = False
+
+print("#####################-REPEATS-######################")
 
 # input function for loopTimes
 def ask_loopTimes():
@@ -346,73 +410,11 @@ def change_loopTimes_yes_no(question, loopTimesCorrect, default="yes"):
             sys.stdout.write("Please respond with 'yes' or 'no' "
                              "(or 'y' or 'n').\n")
 
-# Function for looptimes default or user input
-def replay_loop_yes_no(question, default="yes"):
-    valid = {"yes": True, "y": True, "ye": True,
-             "no": False, "n": False}
-    if default is None:
-        prompt = " [y/n] "
-    elif default == "yes":
-        prompt = " [Y/n] "
-    elif default == "no":
-        prompt = " [y/N] "
-    else:
-        raise ValueError("invalid default answer: '%s'" % default)
-
-    while True:
-        sys.stdout.write(question + prompt)
-        choice = input().lower()
-        if default is not None and choice == "":
-            global keep_going
-            keep_going = True
-            playSequence()
-            return valid[default]
-        elif (choice in valid) == True:
-            if valid[choice] == True:
-                keep_going = True
-                playSequence()
-                return
-            if valid[choice] == False:
-                global replay
-                replay = False
-                return
-        else:
-            sys.stdout.write("Please respond with 'yes' or 'no' "
-                             "(or 'y' or 'n').\n")
-
-# Function for asking to write midi file or not
-def writeMidi(question, default="no"):
-    valid = {"yes": True, "y": True, "ye": True,
-             "no": False, "n": False}
-    if default is None:
-        prompt = " [y/n] "
-    elif default == "yes":
-        prompt = " [Y/n] "
-    elif default == "no":
-        prompt = " [y/N] "
-    else:
-        raise ValueError("invalid default answer: '%s'" % default)
-
-    while True:
-        sys.stdout.write(question + prompt)
-        choice = input().lower()
-        if default is not None and choice == "":
-            return
-        elif (choice in valid) == True:
-            if valid[choice] == True:
-                # write it to disk
-                print("writing to midi file")
-                with open("drumloop.mid", 'wb') as output_file:
-                    mf.writeFile(output_file)
-                return
-
-        else:
-            sys.stdout.write("Please respond with 'yes' or 'no' "
-                             "(or 'y' or 'n').\n")
-
 # Check if user wants to use preset loopTimes or input own loopTimes
 change_loopTimes_yes_no("Do you want to use the default loop number? ",
 loopTimesCorrect)
+
+################################-PLAY-SEQUENCE-#################################
 
 # make sure the sequence keeps going till number of loops is reached
 keep_going = True
@@ -585,8 +587,46 @@ playSequence()
 
 #############################POST-PLAYING-FUNCTIONS#############################
 
+print("#######################-MIDI-#######################")
+
 # Ask if midi file should be written
 writeMidi("Do you want to save this beat as a MIDIfile?")
+
+print("######################-REPLAY-######################")
+
+# Function for looptimes default or user input
+def replay_loop_yes_no(question, default="yes"):
+    valid = {"yes": True, "y": True, "ye": True,
+             "no": False, "n": False}
+    if default is None:
+        prompt = " [y/n] "
+    elif default == "yes":
+        prompt = " [Y/n] "
+    elif default == "no":
+        prompt = " [y/N] "
+    else:
+        raise ValueError("invalid default answer: '%s'" % default)
+
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = input().lower()
+        if default is not None and choice == "":
+            global keep_going
+            keep_going = True
+            playSequence()
+            return valid[default]
+        elif (choice in valid) == True:
+            if valid[choice] == True:
+                keep_going = True
+                playSequence()
+                return
+            if valid[choice] == False:
+                global replay
+                replay = False
+                return
+        else:
+            sys.stdout.write("Please respond with 'yes' or 'no' "
+                             "(or 'y' or 'n').\n")
 
 # while loop for replaying the same sequence
 replay = True
@@ -594,7 +634,9 @@ replay = True
 while replay == True:
     replay_loop_yes_no("Do you want to replay the loop? ")
 
+print("Thanks for using BietMachine!")
+
 # Closing comment
 print("_____/<<<<<<<<<<<<<<<<<<<<|>>>>>>>>>>>>>>>>>>>\_____")
-print("<<<<<<<<<<<<<<<<<<<< bietMeister >>>>>>>>>>>>>>>>>>>")
+print("<<<<<<<<<<<<<<<<<<<< BietMachine >>>>>>>>>>>>>>>>>>>")
 print("\u203e\u203e\u203e\u203e\u203e\\<<<<<<<<<<<<<<<<<<<<|>>>>>>>>>>>>>>>>>>>/\u203e\u203e\u203e\u203e\u203e")
