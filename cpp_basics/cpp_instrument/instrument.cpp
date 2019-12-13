@@ -1,20 +1,40 @@
 #include "instrument.h"
+#include <unistd.h>
 
-
-Instrument::Instrument(std::string sound){ // constructor
-        setSound(sound);
+// ___constructor and destructor___
+// constructor
+Instrument::Instrument(std::string name, std::string sound, int pitchRange){
+  std::cout << "Instrument::Instrument - constructor, name: " << name << "\n";
+  setSound(sound);
+  this->name = name;
+  this->pitchRange = pitchRange;
 }
 
+// destructor
+Instrument::~Instrument(){
+  std::cout << "Instrument::~Instrument - destructor, name: " << name<< "\n";
+}
+
+// ___methods___
+// change sound var
 void Instrument::setSound(std::string sound){
   this->sound = sound;
 }
 
-void Instrument::getSound(){
+// print sound
+void Instrument::play(){
   std::cout << sound << std::endl;
 }
 
+// print sound "rollTimes" times
 void Instrument::roll(int rollTimes){
   for (int i=0; i<rollTimes; i++) {
-    getSound();
+    play();
+    usleep(100000);
   }
+}
+
+// change rollTimes var
+void Instrument::setRollTimes(int rollTimes){
+  this->rollTimes = rollTimes;
 }
