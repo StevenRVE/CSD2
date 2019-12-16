@@ -1,7 +1,7 @@
 CXX=g++
 CXXFLAGS=-Wall -std=c++14
 LDFLAGS= -ljack
-SOURCE= instrument.o leadSynth.o bassSynth.o main.o
+SOURCE= synthesizer.o jack_module.o oscillator.o sine.o square.o saw.o main.o
 
 synth: $(SOURCE)
 	$(CXX) -o $@ $(SOURCE) $(LDFLAGS)

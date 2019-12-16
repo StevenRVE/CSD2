@@ -6,20 +6,15 @@
 class Instrument
 {
   public: // members
-    // ___constructor_and_destructor__
-    Instrument(std::string sound, std::string name, int pitchRange, int lowestNote);
+    // constructor and destructor
+    Instrument(std::string sound);
 
     ~Instrument();
 
-    // ___methods___
+    // methods
     void setSound(std::string sound);
 
-    void setFreq(int frequency);
-
-    void setAttack(int attack);
-    void setDecay(int decay);
-    void setSustain(double sustain);
-    void setRelease(int release);
+    void setPitchRange(int pitchRange, int lowestNote);
 
     void play();
 
@@ -27,7 +22,6 @@ class Instrument
 
     void setRollTimes(int rollTimes);
 
-    void setPitchRange(int pitchRange, int lowestNote);
   protected:
     // variables
     std::string sound;
