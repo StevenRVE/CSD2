@@ -3,7 +3,7 @@
 
 // constructor and destructor
 
-Saw::Saw(float frequency, float samplerate) : Oscillator(frequency, samplerate) {
+Saw::Saw(double frequency, double samplerate) : Oscillator(frequency, samplerate) {
   std::cout << "Saw constructor" << "\n";
 }
 

@@ -3,9 +3,13 @@
 class Square : public Oscillator{
 public:
   // constructor and destructor
-  Square(float frequency, float samplerate);
+  Square(double frequency, double samplerate);
   ~Square();
 
   // methods
   void calculate() override;
+
+  // variables
+private:
+  double pwm;
 };

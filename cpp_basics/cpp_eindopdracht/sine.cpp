@@ -3,7 +3,7 @@
 
 // constructor and destructor
 
-Sine::Sine(float frequency, float samplerate) : Oscillator(frequency, samplerate) {
+Sine::Sine(double frequency, double samplerate) : Oscillator(frequency, samplerate) {
   std::cout << "Sine constructor" << "\n";
 }
 

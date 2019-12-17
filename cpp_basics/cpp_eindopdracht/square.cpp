@@ -3,7 +3,7 @@
 
 // constructor and destructor
 
-Square::Square(float frequency, float samplerate) : Oscillator(frequency, samplerate) {
+Square::Square(double frequency, double samplerate) : Oscillator(frequency, samplerate) {
   std::cout << "Square constructor" << "\n";
 }
 
