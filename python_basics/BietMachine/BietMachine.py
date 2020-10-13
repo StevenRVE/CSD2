@@ -294,8 +294,21 @@ chanceSnareNumber = 50
 
 print("####################-ALGORYTHM-#####################")
 
+
+def algorythm(x,y,z):
+    if chanceHihat < x:
+        samples[0].play()
+        mf.addNote(track, channel, 62, timestamp, duration, volume)
+    if chanceKick - y < chanceKickNumber:
+        samples[1].play()
+        mf.addNote(track, channel, 60, timestamp, duration, volume)
+    if chanceSnare + z < chanceSnareNumber:
+        samples[2].play()
+        mf.addNote(track, channel, 64, timestamp, duration, volume)
+
+
 # beat randomness algorythm
-def chooseAlgorythm():
+def choose_algorythm():
     global algorythm
     global chosenAlgorythm
     global groupNumber
@@ -356,7 +369,7 @@ def chooseAlgorythm():
         # volledig random
         print("You choose algorythm 4")
 
-chooseAlgorythm()
+choose_algorythm()
 
 ##################################-LOOPTIMES-###################################
 
@@ -434,7 +447,7 @@ loopTimesCorrect)
 keep_going = True
 
 # function for playing the sequence
-def playSequence():
+def play_sequence():
     for i in range(loopTimes):
         global loopedTimes
         global dictList
@@ -470,105 +483,33 @@ def playSequence():
                 if chosenAlgorythm == 1:
                     # quarter notes
                     if timestamp % groupNumber == 0:
-                        if chanceHihat < 50:
-                            samples[0].play()
-                            mf.addNote(track, channel, 62, timestamp, duration, volume)
-                        if chanceKick - 30 < chanceKickNumber:
-                            samples[1].play()
-                            mf.addNote(track, channel, 60, timestamp, duration, volume)
-                        if chanceSnare + 30 < chanceSnareNumber:
-                            samples[2].play()
-                            mf.addNote(track, channel, 64, timestamp, duration, volume)
+                        algorythm(50,-30,30)
                     # in between quarter notes
                     elif (timestamp + (groupNumber / 2)) % groupNumber == 0:
-                        if chanceHihat < 40:
-                            samples[0].play()
-                            mf.addNote(track, channel, 62, timestamp, duration, volume)
-                        if (chanceKick + 20) < chanceKickNumber:
-                            samples[1].play()
-                            mf.addNote(track, channel, 60, timestamp, duration, volume)
-                        if (chanceSnare - 20) < chanceSnareNumber:
-                            samples[2].play()
-                            mf.addNote(track, channel, 64, timestamp, duration, volume)
+                        algorythm(40,20,-20)
                     # leftover sixteenth notes
                     else:
-                        if chanceHihat < 60:
-                            samples[0].play()
-                            mf.addNote(track, channel, 62, timestamp, duration, volume)
-                        if chanceKick + 35 < chanceKickNumber:
-                            samples[1].play()
-                            mf.addNote(track, channel, 60, timestamp, duration, volume)
-                        if chanceSnare + 35 < chanceSnareNumber:
-                            samples[2].play()
-                            mf.addNote(track, channel, 64, timestamp, duration, volume)
+                        algorythm(60,35,35)
                 if chosenAlgorythm == 2:
                     # triplets
                     if timestamp % groupNumber == 0:
-                        if chanceHihat < 50:
-                            samples[0].play()
-                            mf.addNote(track, channel, 62, timestamp, duration, volume)
-                        if chanceKick - 40 < chanceKickNumber:
-                            samples[1].play()
-                            mf.addNote(track, channel, 60, timestamp, duration, volume)
-                        if chanceSnare < chanceSnareNumber:
-                            samples[2].play()
-                            mf.addNote(track, channel, 64, timestamp, duration, volume)
+                        algorythm(50,40,0)
                     # leftover sixteenth notes
                     else:
-                        if chanceHihat < 70:
-                            samples[0].play()
-                            mf.addNote(track, channel, 62, timestamp, duration, volume)
-                        if chanceKick + 40 < chanceKickNumber:
-                            samples[1].play()
-                            mf.addNote(track, channel, 60, timestamp, duration, volume)
-                        if chanceSnare + 40 < chanceSnareNumber:
-                            samples[2].play()
-                            mf.addNote(track, channel, 64, timestamp, duration, volume)
+                        algorythm(70,40,40)
                 if chosenAlgorythm == 3:
                     # first triplet
                     if timestamp % groupNumber == 0:
-                        if chanceHihat < 70:
-                            samples[0].play()
-                            mf.addNote(track, channel, 62, timestamp, duration, volume)
-                        if chanceKick - 40 < chanceKickNumber:
-                            samples[1].play()
-                            mf.addNote(track, channel, 60, timestamp, duration, volume)
-                        if chanceSnare + 40 < chanceSnareNumber:
-                            samples[2].play()
-                            mf.addNote(track, channel, 64, timestamp, duration, volume)
+                        algorythm(70,-40,40)
                     # second triplet
                     elif (timestamp + (groupNumber / 2)) % groupNumber == 0:
-                        if chanceHihat < 40:
-                            samples[0].play()
-                            mf.addNote(track, channel, 62, timestamp, duration, volume)
-                        if (chanceKick + 40) < chanceKickNumber:
-                            samples[1].play()
-                            mf.addNote(track, channel, 60, timestamp, duration, volume)
-                        if (chanceSnare - 40) < chanceSnareNumber:
-                            samples[2].play()
-                            mf.addNote(track, channel, 64, timestamp, duration, volume)
+                        algorythm(40,40,-40)
                     # leftover sixteenth notes
                     else:
-                        if chanceHihat < 80:
-                            samples[0].play()
-                            mf.addNote(track, channel, 62, timestamp, duration, volume)
-                        if chanceKick + 35 < chanceKickNumber:
-                            samples[1].play()
-                            mf.addNote(track, channel, 60, timestamp, duration, volume)
-                        if chanceSnare + 35 < chanceSnareNumber:
-                            samples[2].play()
-                            mf.addNote(track, channel, 64, timestamp, duration, volume)
+                        algorythm(80,35,35)
                 if chosenAlgorythm == 4:
                     # all sixteenth notes random
-                    if chanceHihat < 60:
-                        samples[0].play()
-                        mf.addNote(track, channel, 62, timestamp, duration, volume)
-                    if chanceKick < chanceKickNumber:
-                        samples[1].play()
-                        mf.addNote(track, channel, 60, timestamp, duration, volume)
-                    if chanceSnare < chanceSnareNumber:
-                        samples[2].play()
-                        mf.addNote(track, channel, 64, timestamp, duration, volume)
+                    algorythm(40,20,-20)
 
                 # if there are timestamps left in the timestamps list
                 if dictList:
@@ -597,7 +538,7 @@ def playSequence():
         keep_going = False
 
 # play the sequence
-playSequence()
+play_sequence()
 
 #############################POST-PLAYING-FUNCTIONS#############################
 
@@ -627,12 +568,12 @@ def replay_loop_yes_no(question, default="yes"):
         if default is not None and choice == "":
             global keep_going
             keep_going = True
-            playSequence()
+            play_sequence()
             return valid[default]
         elif (choice in valid) == True:
             if valid[choice] == True:
                 keep_going = True
-                playSequence()
+                play_sequence()
                 return
             if valid[choice] == False:
                 global replay

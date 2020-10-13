@@ -6,15 +6,26 @@ import threading as th
 import time as tm
 import math
 
+# notes:
+# Functie maken voor de gelijke stukken code binnen de error handling functies
+# checken of een handle input functie maken rendabel is
+# Algorythm functie maken
+# user interface standard BPM niet duidelijk
+# denominator invoer onduidelijk
+
 # Define instrument
 samples = [sa.WaveObject.from_wave_file("samples/16_bit/Hihat.wav"),
             sa.WaveObject.from_wave_file("samples/16_bit/Kick.wav"),
             sa.WaveObject.from_wave_file("samples/16_bit/Snare.wav")]
 
 # Program title
-print("_____/<<<<<<<<<<<<<<<<<<<<|>>>>>>>>>>>>>>>>>>>\_____")
-print("<<<<<<<<<<<<<<<<<<<< BietMachine >>>>>>>>>>>>>>>>>>>")
-print("\u203e\u203e\u203e\u203e\u203e\\<<<<<<<<<<<<<<<<<<<<|>>>>>>>>>>>>>>>>>>>/\u203e\u203e\u203e\u203e\u203e")
+print("""
+
+_____/<<<<<<<<<<<<<<<<<<<<|>>>>>>>>>>>>>>>>>>>\_____
+<<<<<<<<<<<<<<<<<<<< BietMachine >>>>>>>>>>>>>>>>>>>
+\u203e\u203e\u203e\u203e\u203e\\<<<<<<<<<<<<<<<<<<<<|>>>>>>>>>>>>>>>>>>>/\u203e\u203e\u203e\u203e\u203e
+
+""")
 
 tm.sleep(0.5)
 
@@ -26,7 +37,8 @@ print("""
 
 tm.sleep(1)
 
-print(""" ___________________________________________________
+print("""
+ ___________________________________________________
 |.................. Instructions ..................|
 |                                                  |
 |You can choose to use default settings for the bpm|
@@ -60,7 +72,7 @@ bpm = 120
 bpmCorrect = False
 
 # input function for bpm with error handling
-def ask_BPM():
+def ask_bpm():
     global bpm
     global bpmCorrect
 
@@ -87,7 +99,7 @@ def ask_BPM():
              print("The bpm is now: " + str(bpm))
 
 # Check if user wants to use preset bpm or input own bpm
-def change_BPM_yes_no(question, bpmCorrect, default="yes"):
+def change_bpm_yes_no(question, bpmCorrect, default="yes"):
     """Ask a yes/no question via input() and return their answer.
 
     "question" is a string that is presented to the user.
@@ -119,13 +131,13 @@ def change_BPM_yes_no(question, bpmCorrect, default="yes"):
                 print("The default bpm is %d" % bpm)
                 return
             if valid[choice] == False:
-                ask_BPM()
+                ask_bpm()
                 return
         else:
             sys.stdout.write("Please respond with 'yes' or 'no' "
                              "(or 'y' or 'n').\n")
 
-change_BPM_yes_no("Do you want to use the default BPM? ", bpmCorrect)
+change_bpm_yes_no("Do you want to use the default BPM? ", bpmCorrect)
 
 #################################-NOTEDURATION-#################################
 
@@ -144,7 +156,7 @@ timestamps16th = []
 print("######################-RYTHM-#######################")
 
 # ask user what rythm he wants to use with error handling
-def inputRythm():
+def input_rythm():
     global timestamps16th
     global rythmCorrect
     global noteDuration
@@ -200,7 +212,7 @@ def inputRythm():
     for sixteenthNotes in range(0, denominator):
         timestamps16th.append(sixteenthNotes)
 
-inputRythm()
+input_rythm()
 
 # transform the noteTimestamps to a timestamps list with time values
 for timestamp in timestamps16th:
@@ -242,7 +254,7 @@ mf.addTrackName(track, time, "Sample Track")
 mf.addTempo(track, time, 120)
 
 # Function for asking to write midi file or not
-def writeMidi(question, default="no"):
+def write_midi(question, default="no"):
     valid = {"yes": True, "y": True, "ye": True,
              "no": False, "n": False}
     if default is None:
@@ -283,7 +295,7 @@ chanceSnareNumber = 50
 print("####################-ALGORYTHM-#####################")
 
 # beat randomness algorythm
-def chooseAlgorythm():
+def choose_algorythm():
     global algorythm
     global chosenAlgorythm
     global groupNumber
@@ -292,7 +304,8 @@ def chooseAlgorythm():
     algorythmCorrect = False
     valid = {1,2,3,4}
 
-    print(""" ___________________________________________________
+    print("""
+ ___________________________________________________
 |................... Algorythm ....................|
 |  You can choose between 4 different algorythms:  |
 |                                                  |
@@ -304,6 +317,7 @@ def chooseAlgorythm():
 |                                                  |
 |    Choose a algorythm by typing it's number      |
 |__________________________________________________|
+
 """)
 
     while (algorythmCorrect == False):
@@ -342,7 +356,7 @@ def chooseAlgorythm():
         # volledig random
         print("You choose algorythm 4")
 
-chooseAlgorythm()
+choose_algorythm()
 
 ##################################-LOOPTIMES-###################################
 
@@ -420,7 +434,7 @@ loopTimesCorrect)
 keep_going = True
 
 # function for playing the sequence
-def playSequence():
+def play_sequence():
     for i in range(loopTimes):
         global loopedTimes
         global dictList
@@ -583,14 +597,14 @@ def playSequence():
         keep_going = False
 
 # play the sequence
-playSequence()
+play_sequence()
 
 #############################POST-PLAYING-FUNCTIONS#############################
 
 print("#######################-MIDI-#######################")
 
 # Ask if midi file should be written
-writeMidi("Do you want to save this beat as a MIDIfile?")
+write_midi("Do you want to save this beat as a MIDIfile?")
 
 print("######################-REPLAY-######################")
 
@@ -613,12 +627,12 @@ def replay_loop_yes_no(question, default="yes"):
         if default is not None and choice == "":
             global keep_going
             keep_going = True
-            playSequence()
+            play_sequence()
             return valid[default]
         elif (choice in valid) == True:
             if valid[choice] == True:
                 keep_going = True
-                playSequence()
+                play_sequence()
                 return
             if valid[choice] == False:
                 global replay
@@ -637,6 +651,10 @@ while replay == True:
 print("Thanks for using BietMachine!")
 
 # Closing comment
-print("_____/<<<<<<<<<<<<<<<<<<<<|>>>>>>>>>>>>>>>>>>>\_____")
-print("<<<<<<<<<<<<<<<<<<<< BietMachine >>>>>>>>>>>>>>>>>>>")
-print("\u203e\u203e\u203e\u203e\u203e\\<<<<<<<<<<<<<<<<<<<<|>>>>>>>>>>>>>>>>>>>/\u203e\u203e\u203e\u203e\u203e")
+print("""
+
+_____/<<<<<<<<<<<<<<<<<<<<|>>>>>>>>>>>>>>>>>>>\_____
+<<<<<<<<<<<<<<<<<<<< BietMachine >>>>>>>>>>>>>>>>>>>
+\u203e\u203e\u203e\u203e\u203e\\<<<<<<<<<<<<<<<<<<<<|>>>>>>>>>>>>>>>>>>>/\u203e\u203e\u203e\u203e\u203e
+
+""")
