@@ -5,27 +5,25 @@
 class Oscillator
 {
 public:
-  //Constructor and destructor
+  // constructor and destructor
   Oscillator(double frequency, double samplerate);
   ~Oscillator();
 
-  //return the current sample
-  double getSample();
-  // go to next sample
+  // methods
   void tick();
   virtual void calculate() = 0;
 
-  //getters and setters
-  void setFrequency(double frequency);
+  // getters and setters
   double getFrequency();
-
-  //NOTE - do we need a setter for phase? for now -> not using one
+  void setFrequency(double frequency);
+  double getSample();
 
 protected:
+  // variables
   double amplitude;
   double frequency;
   double phase;
-  // contains the current sample
+  // -contains the current sample-
   double sample;
   double samplerate;
 };

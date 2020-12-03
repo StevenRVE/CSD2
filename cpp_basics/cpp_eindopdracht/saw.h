@@ -1,5 +1,5 @@
 #include "oscillator.h"
-
+#pragma once
 class Saw : public Oscillator{
 public:
   // constructor and destructor

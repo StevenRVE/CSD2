@@ -2,7 +2,6 @@
 #include "math.h"
 
 // constructor and destructor
-
 Saw::Saw(double frequency, double samplerate) : Oscillator(frequency, samplerate) {
   std::cout << "Saw constructor" << "\n";
 }

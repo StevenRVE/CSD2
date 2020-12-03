@@ -15,7 +15,7 @@ class Instrument
     void setSound(std::string sound);
 
     void setFreq(int frequency);
-
+    
     void setAttack(int attack);
     void setDecay(int decay);
     void setSustain(double sustain);

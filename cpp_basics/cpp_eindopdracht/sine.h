@@ -1,4 +1,5 @@
 #include "oscillator.h"
+#pragma once
 
 class Sine : public Oscillator{
 public:
