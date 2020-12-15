@@ -1,3 +1,0 @@
-g++ -c program.cpp   // maakt een .o file ervan
-g++ -c program_main.cpp
-g++ -o program_name oscillator.o oscillator_main.o // maakt er een executable van
