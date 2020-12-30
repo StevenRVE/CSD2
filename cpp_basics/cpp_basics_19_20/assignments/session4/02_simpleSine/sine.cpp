@@ -1,10 +1,10 @@
 #include "sine.h"
 #include "math.h"
 
-Sine::Sine(float frequency, double samplerate, float amplitude) : frequency(frequency), samplerate(samplerate), amplitude(amplitude) {
+Sine::Sine(float frequency, double samplerate, float amplitude)
+: frequency(frequency), samplerate(samplerate), amplitude(amplitude), sample(0), phase(0)
+{
   // initialize members
-  sample = 0;
-  phase = 0;
   std::cout << "Sine - constructor\n";
 }
 
@@ -19,26 +19,16 @@ float Sine::getSample() {
   return sample;
 }
 
-void Sine::tick() {
-  // TODO - frequency / SAMPLERATE can be implemented in a more efficient way
-  phase += frequency / SAMPLERATE;
+void Sine::calculate(double phase) {
   sample = amplitude * sin(M_PI * 2 * phase);
-
-// blokgolf
-  // if(sample > 0){
-  //   sample = 1;
-  // }
-  // if(sample <= 0){
-  //   sample = -1;
-  // }
-  // sample = pow((pow(sample,4)),12);
 }
 
 //getters and setters
 void Sine::setFrequency(float frequency)
 {
-  // TODO add check to see if parameter is valid
-  this->frequency = frequency;
+  if(frequency >= 20 && <+ 20000){
+    this->frequency = frequency;
+  }
 }
 
 float Sine::getFrequency()

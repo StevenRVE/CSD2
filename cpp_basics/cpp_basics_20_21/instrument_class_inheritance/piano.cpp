@@ -3,11 +3,13 @@
 #define LOG(x) std::cout << x << std::endl;
 
 // Constructor and destructor
-Piano::Piano(std::string name, std::string sound) : Instrument(name, sound){
+Piano::Piano(std::string name, std::string sound) : Instrument(name, sound)
+{
   LOG("Constructor Piano");
 }
 
-Piano::~Piano(){
+Piano::~Piano()
+{
   LOG("Destructor Piano");
 }
 
