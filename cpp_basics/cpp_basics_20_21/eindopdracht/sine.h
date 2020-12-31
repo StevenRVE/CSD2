@@ -11,7 +11,7 @@ public:
   ~Sine();
 
   // go to next sample
-  void calculate(double phase);
+  void calculate();
 
   //getters and setters
 

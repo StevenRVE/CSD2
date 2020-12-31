@@ -26,16 +26,18 @@ int main(int argc,char **argv)
   double samplerate = jack.getSamplerate();
 
   // -create a synth instance with frequency
-  // Synthesizer synth (220, 44100, 0.8);
-  Sine sine (440, samplerate);
+  Synthesizer synth (440, samplerate);
+  Oscillator* osc = synth.chooseOsc(1);
+  // Sine sine (440, samplerate);
 
   // -assign a function to the JackModule::onProces-
-  jack.onProcess = [&sine](jack_default_audio_sample_t *inBuf,
+  jack.onProcess = [&](jack_default_audio_sample_t *inBuf,
      jack_default_audio_sample_t *outBuf, jack_nframes_t nframes) {
 
     for(unsigned int i = 0; i < nframes; i++) {
-      outBuf[i] = sine.getSample();
-      sine.tick();
+      outBuf[i] = osc->getSample();
+      // std::cout << sine.getSample() << "\n";
+      osc->tick();
     }
 
     return 0;

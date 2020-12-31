@@ -1,10 +1,11 @@
 #include "synthesizer.h"
 
-
 // constructor
-Synthesizer::Synthesizer(double freq, double samplerate, double amplitude) : freq(freq), samplerate(samplerate), amplitude(amplitude)
+Synthesizer::Synthesizer(double frequency, double samplerate)
 {
   std::cout << "Synthesizer - constructor\n";
+  this->frequency=frequency;
+  this->samplerate=samplerate;
 }
 
 // destructor
@@ -19,10 +20,28 @@ void Synthesizer::tick(double samplerate) {
 }
 
 // getters and setters
-double Synthesizer::getFreq() {
-  return freq;
+double Synthesizer::getFrequency() {
+  return frequency;
 }
 
-void Synthesizer::setFreq(double freq) {
-  this->freq=freq;
+void Synthesizer::setFrequency(double frequency) {
+  this->frequency=frequency;
+}
+
+Oscillator* Synthesizer::chooseOsc(int i){
+  // std::cout << "freq is = " << getFrequency() << std::endl;
+  Oscillator* osc = nullptr;
+
+  if(i == 1){
+  osc =  new Sine(440, 44100);
+  }
+
+  return osc;
+
+  // if(i == 2){
+  //   return new Saw(frequency, samplerate);
+  // }
+  // if(i == 3){
+  //   return new Square(frequency, samplerate);
+  // }
 }

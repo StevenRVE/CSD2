@@ -3,7 +3,7 @@
 
 // constructor //
 Oscillator::Oscillator(double frequency, double samplerate)
-: frequency(frequency), samplerate(samplerate), amplitude(1.0), sample(0), phase(0)
+: frequency(frequency), samplerate(samplerate), amplitude(0.8), sample(0), phase(0)
 {
   // initialize members
   std::cout << "Oscillator - constructor\n";
@@ -39,4 +39,8 @@ void Oscillator::setFrequency(double frequency)
 
 double Oscillator::getSample() {
   return sample;
+}
+
+double Oscillator::getPhase() {
+  return phase;
 }

@@ -17,6 +17,7 @@ public:
   double getFrequency();
   void setFrequency(double frequency);
   double getSample();
+  double getPhase();
 
 protected:
   // variables
