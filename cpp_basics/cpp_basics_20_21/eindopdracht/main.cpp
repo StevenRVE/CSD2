@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <thread>
+#include <ctime>
+#include <chrono>
 #include "jack_module.h"
 #include "math.h"
 
@@ -14,6 +16,9 @@
 #include "synthesizer.h"
 
 // FM, AM, LFO
+
+// MelodyGenerator
+#include "melodyGenerator.h"
 
 // define PI * 2
 #define PI_2 6.28318530717959
@@ -29,16 +34,25 @@ int main(int argc,char **argv)
 
   // -create a synth instance with frequency
   Synthesizer synth (440, samplerate);
-  Oscillator* osc = synth.chooseOsc(3);
-  // Square square (440, samplerate);
+
+  Oscillator* osc1 = synth.chooseOsc(1);
+  Oscillator* osc2 = synth.chooseOsc(2);
+
+  synth.setFrequency(220);
+
+  MelodyGenerator melody;
+
 
   // -assign a function to the JackModule::onProces-
   jack.onProcess = [&](jack_default_audio_sample_t *inBuf,
      jack_default_audio_sample_t *outBuf, jack_nframes_t nframes) {
 
     for(unsigned int i = 0; i < nframes; i++) {
-      outBuf[i] = osc->getSample();
-      osc->tick();
+      outBuf[i] = (osc1->getSample()* 0.9) + (osc2->getSample() * 0.2);
+      osc1->setFrequency(synth.getFrequency());
+      osc2->setFrequency(synth.getFrequency());
+      osc1->tick();
+      osc2->tick();
     }
 
     return 0;

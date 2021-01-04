@@ -1,11 +1,17 @@
 #include "synthesizer.h"
 
+/*
+to do list:
+- setting frequency changes osc frequency
+- add function to choose amount of voices
+*/
+
 // constructor
 Synthesizer::Synthesizer(double frequency, double samplerate)
 {
   std::cout << "Synthesizer - constructor\n";
-  this->frequency=frequency;
-  this->samplerate=samplerate;
+  this->frequency = frequency;
+  this->samplerate = samplerate;
 }
 
 // destructor
@@ -28,17 +34,16 @@ Oscillator* Synthesizer::chooseOsc(int i){
   Oscillator* osc = nullptr;
 
   if(i == 1){
-    osc = new Sine(440, 44100);
+    osc = new Sine(getFrequency(), samplerate);
   }
 
   if(i == 2){
-    osc = new Square(440, 44100);
+    osc = new Square(getFrequency(), samplerate);
   }
 
   if(i == 3){
-    osc = new Saw(440, 44100);
+    osc = new Saw(getFrequency(), samplerate);
   }
 
   return osc;
-
 }

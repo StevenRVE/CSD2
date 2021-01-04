@@ -1,17 +1,22 @@
-class MelodyGenerator{
+class MelodyGenerator
+{
+public:
+  // constructor and  destructor
   MelodyGenerator();
   ~MelodyGenerator();
 
-public:
-  void randomFrequency();
-  void clock();
+  // methods
 
-  void chooseScale();
-  double mtof();
-  // getters and setters
-  int getFrequency();
-  void setFrequency();
+  // void test();
+  // void randomFrequency();
+  // void rotateScale();
+  // void chooseScale();
+  // double mtof();
+  //
+  // // getters and setters
+
 private:
+  // int scaleNumber;
+  int scale [8];
 
-
-}
+};
