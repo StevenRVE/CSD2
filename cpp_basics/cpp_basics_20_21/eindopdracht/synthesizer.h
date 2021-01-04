@@ -3,8 +3,9 @@
 #include <iostream>
 #include "oscillator.h"
 #include "sine.h"
-// #include "saw.h"
-// #include "pulse.h"
+#include "square.h"
+#include "saw.h"
+
 // #include "envelope.h"
 
 class Synthesizer {

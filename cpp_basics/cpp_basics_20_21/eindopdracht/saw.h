@@ -1,14 +1,14 @@
-#ifndef _SINE_H_
-#define _SINE_H_
+#ifndef _SAW_H_
+#define _SAW_H_
 #include <iostream>
 #include "oscillator.h"
 
-class Sine : public Oscillator
+class Saw : public Oscillator
 {
 public:
   //Constructor and destructor
-  Sine(float frequency, double samplerate);
-  ~Sine();
+  Saw(float frequency, double samplerate);
+  ~Saw();
 
   // go to next sample
   void calculate();
@@ -16,7 +16,7 @@ public:
   //getters and setters
 
 private:
-
+// int overtonesAmount;
 };
 
 #endif

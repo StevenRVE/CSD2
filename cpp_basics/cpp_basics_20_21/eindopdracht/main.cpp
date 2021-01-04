@@ -3,11 +3,13 @@
 #include <thread>
 #include "jack_module.h"
 #include "math.h"
+
 // OSCILLATORS
 #include "oscillator.h"
 #include "sine.h"
-// #include "pulse.h"
-// #include "saw.h"
+#include "square.h"
+#include "saw.h"
+
 // SYNTHS
 #include "synthesizer.h"
 
@@ -27,8 +29,8 @@ int main(int argc,char **argv)
 
   // -create a synth instance with frequency
   Synthesizer synth (440, samplerate);
-  Oscillator* osc = synth.chooseOsc(1);
-  // Sine sine (440, samplerate);
+  Oscillator* osc = synth.chooseOsc(3);
+  // Square square (440, samplerate);
 
   // -assign a function to the JackModule::onProces-
   jack.onProcess = [&](jack_default_audio_sample_t *inBuf,
@@ -36,7 +38,6 @@ int main(int argc,char **argv)
 
     for(unsigned int i = 0; i < nframes; i++) {
       outBuf[i] = osc->getSample();
-      // std::cout << sine.getSample() << "\n";
       osc->tick();
     }
 

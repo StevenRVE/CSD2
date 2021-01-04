@@ -13,12 +13,6 @@ Synthesizer::~Synthesizer(){
   std::cout << "Synthesizer - destructor\n";
 }
 
-// methods
-void Synthesizer::tick(double samplerate) {
-  // -tick envelope and oscillator-
-  // sample = osc.getSample() * env.getSample();
-}
-
 // getters and setters
 double Synthesizer::getFrequency() {
   return frequency;
@@ -28,20 +22,23 @@ void Synthesizer::setFrequency(double frequency) {
   this->frequency=frequency;
 }
 
+// methods
 Oscillator* Synthesizer::chooseOsc(int i){
   // std::cout << "freq is = " << getFrequency() << std::endl;
   Oscillator* osc = nullptr;
 
   if(i == 1){
-  osc =  new Sine(440, 44100);
+    osc = new Sine(440, 44100);
+  }
+
+  if(i == 2){
+    osc = new Square(440, 44100);
+  }
+
+  if(i == 3){
+    osc = new Saw(440, 44100);
   }
 
   return osc;
 
-  // if(i == 2){
-  //   return new Saw(frequency, samplerate);
-  // }
-  // if(i == 3){
-  //   return new Square(frequency, samplerate);
-  // }
 }
