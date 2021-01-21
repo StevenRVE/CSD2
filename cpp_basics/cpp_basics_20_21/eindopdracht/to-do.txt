@@ -1,0 +1,5 @@
+TO DO LIST: Synth project
+
+- clock maken voor het meten van tijd
+- envelope maken aan de hand van tijd
+- 

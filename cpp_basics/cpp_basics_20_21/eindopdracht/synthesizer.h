@@ -25,6 +25,10 @@ public:
   double getFrequency();
   void setFrequency(double frequency);
 
+  void noteO();
+  void noteOff();
+
+  
 private:
   // variables
   double frequency;

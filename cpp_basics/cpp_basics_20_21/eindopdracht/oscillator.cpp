@@ -1,3 +1,4 @@
+#include <iostream>
 #include "oscillator.h"
 #include "math.h"
 
@@ -21,6 +22,10 @@ void Oscillator::tick(){
   // TODO - frequency / samplerate can be implemented in a more efficient way
   phase += frequency / samplerate;
   calculate();
+  if (phase >= 1){
+    phase = 0;
+  }
+  std::cout << "phase = " << phase << "\n";
 }
 
 //getters and setters //
@@ -37,10 +42,12 @@ void Oscillator::setFrequency(double frequency)
   }
 }
 
-double Oscillator::getSample() {
+double Oscillator::getSample()
+{
   return sample;
 }
 
-double Oscillator::getPhase() {
+double Oscillator::getPhase()
+{
   return phase;
 }

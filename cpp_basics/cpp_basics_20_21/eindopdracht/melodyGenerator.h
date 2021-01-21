@@ -11,7 +11,7 @@ public:
   // void randomFrequency();
   // void rotateScale();
   // void chooseScale();
-  // double mtof();
+  double mtof();
   //
   // // getters and setters
 
