@@ -1,11 +1,10 @@
 #include <iostream>
-#include <ctime>
+#include <vector>
 #include <chrono>
+#include <ctime>
 #include <thread>
 
-int main()
-{
-
+void generateMelody(){
   time_t start, finish;
   time(&start);
 
@@ -19,10 +18,20 @@ int main()
     float duration = difftime(finish, start);
 
     if(duration >= timestamp){
-
+       int x = 1;
+       std::cout << "frequency is: " << duration << "\n";
+       time(&start);
+       // return frequency;
     }
     else{
       std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
   }
+}
+
+int main()
+{
+  generateMelody();
+
+return 0;
 }
