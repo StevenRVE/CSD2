@@ -25,7 +25,7 @@ void Oscillator::tick(){
   if (phase >= 1){
     phase = 0;
   }
-  std::cout << "phase = " << phase << "\n";
+  // std::cout << "phase = " << phase << "\n";
 }
 
 //getters and setters //

@@ -1,5 +1,14 @@
 TO DO LIST: Synth project
 
+- diagrammen maken van classes
+- MelodyGenerator
+- git commits bijhouden
+- video maken
+- writeToFile includen
+
+extra:
 - clock maken voor het meten van tijd
 - envelope maken aan de hand van tijd
-- 
+- voices
+- speelbaar maken met keyboard
+- midi input/output
