@@ -17,9 +17,10 @@ MelodyGenerator::MelodyGenerator()
 
 MelodyGenerator::~MelodyGenerator()
 {
-  std::cout << "MelodyGenerator - denstructor\n";
+  std::cout << "MelodyGenerator - destructor\n";
 }
 
+// methods
 void MelodyGenerator::randomSeed()
 {
   srand (time(NULL));
@@ -43,8 +44,8 @@ void MelodyGenerator::generateScale(int startPos, int midiBaseValue)
       newScale.push_back(frequency);
     }
     // print newScale
-    // for (auto it = newScale.begin(); it != newScale.end(); ++it)
-    //       std::cout << *it << " ";
+    for (auto it = newScale.begin(); it != newScale.end(); ++it)
+          std::cout << *it << " ";
     }
 }
 
@@ -60,26 +61,7 @@ double MelodyGenerator::mtof(int midiValue){
   return (a / 32.0) * pow(2.0, ((midiValue - 9.0) / 12.0));
 }
 
-
-
 double MelodyGenerator::generateMelody(){
    double frequency = randomFrequency();
    return frequency;
 }
-
-// getters and setters
-// void MelodyGenerator::setFrequency(double frequency){
-//   this->frequency = frequency;
-// }
-//
-// double MelodyGenerator::getFrequency(){
-//   return frequency;
-// }
-//
-// void MelodyGenerator::setNewFrequency(double newFrequency){
-//   this->newFrequency = newFrequency;
-// }
-//
-// double MelodyGenerator::getNewFrequency(){
-//   return newFrequency;
-// }
