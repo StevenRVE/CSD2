@@ -17,17 +17,11 @@ public:
   ~Synthesizer();
 
   // methods
-  void tick(double samplerate);
-
   Oscillator* chooseOsc(int i);
 
   // getters and setters
   double getFrequency();
   void setFrequency(double frequency);
-
-  void noteO();
-  void noteOff();
-
   
 private:
   // variables

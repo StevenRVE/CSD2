@@ -21,7 +21,7 @@ public:
 
 private:
   std::vector<int> scaleFormula {0,2,2,1,2,2,2,1};
-  std::vector<int> newScale {0};
+  std::vector<int> newScale {};
   int startPos;
   int midiBaseValue;
   int midiValue = 60;

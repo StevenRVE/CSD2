@@ -43,10 +43,7 @@ void MelodyGenerator::generateScale(int startPos, int midiBaseValue)
       int frequency = mtof(storeNumber);
       newScale.push_back(frequency);
     }
-    // print newScale
-    for (auto it = newScale.begin(); it != newScale.end(); ++it)
-          std::cout << *it << " ";
-    }
+  }
 }
 
 double MelodyGenerator::randomFrequency(){

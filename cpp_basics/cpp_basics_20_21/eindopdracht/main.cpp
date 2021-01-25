@@ -47,7 +47,7 @@ int main(int argc,char **argv)
 
   // Ask user input to choose which Synth to use
   std::cout << "\n"
-            <<"This is Steven's cpp synthesizer\n"
+            <<"This is Steven's C++ synthesizer\n"
             << "First, let's choose which synth you want to use.\n"
             << "________________________________________________\n"
             << "Press 1: LeadSynth\n"
@@ -94,28 +94,23 @@ int main(int argc,char **argv)
     std::cin >> userInput2;
 
     if (userInput2 == 1 || userInput2 == 2 || userInput2 == 3){
-      if (userInput1 == 1){
+      if (userInput2 == 1){
         clockTime1 = 100;
         clockTime2 = 200;
         clockTime3 = 100;
         std::cout << "You choose slow" << "\n";
       }
-      else if (userInput1 == 2){
+      else if (userInput2 == 2){
         clockTime1 = 50;
         clockTime2 = 100;
         clockTime3 = 50;
         std::cout << "You choose medium" << "\n";
       }
-      else if(userInput1 == 3){
+      else if(userInput2 == 3){
         clockTime1 = 25;
         clockTime2 = 50;
         clockTime3 = 25;
         std::cout << "You choose fast" << "\n";
-      }
-      else if(userInput1 == 4){
-        clockTime1 = 7;
-        clockTime2 = 4;
-        clockTime3 = 10;
       }
       else {
         std::cout << "Sorry that wasn't what I requested.";
@@ -124,24 +119,26 @@ int main(int argc,char **argv)
     }
 
   // Ask user which waveshape they want to use
-  if (userInput1 == 1 || userInput1 == 2 || userInput1 == 3){
-    std::cout << "\n"
-              <<"Which waveshapes do you want to use?\n"
-              << "Press 1: sine\n"
-              << "Press 2: square\n"
-              << "Press 3: saw\n"
-              << "Enter answer here and press ENTER: ";
+  std::cout << "\n"
+            <<"Which waveshapes do you want to use?\n"
+            << "Press 1: sine\n"
+            << "Press 2: square\n"
+            << "Press 3: saw\n"
+            << "Enter answer here and press ENTER: ";
 
-    std::cin >> userInput3;
+  std::cin >> userInput3;
 
-    if (userInput3 == 1 || userInput3 == 2 || userInput3 == 3){
-      chooseWaveShape = userInput3;
-    }
-    else {
-      std::cout << "Sorry that wasn't what I requested.";
-      return 0;
-    }
+  if (userInput3 == 1 || userInput3 == 2 || userInput3 == 3){
+    chooseWaveShape = userInput3;
   }
+  else {
+    std::cout << "Sorry that wasn't what I requested.";
+    return 0;
+  }
+
+  std::cout << "leadSynthOn: " << leadSynthOn << "\n"
+            << "bassSynthOn: " << bassSynthOn << "\n"
+            << "fmSynthOn: " << fmSynthOn << "\n";
 
   // init the jack, use program name as JACK client name
   jack.init(argv[0]);
@@ -151,10 +148,11 @@ int main(int argc,char **argv)
   // leadSynth
   Synthesizer leadSynth (440, samplerate);
   // bassSynth
-  Synthesizer bassSynth (220, samplerate);
+  Synthesizer bassSynth (440, samplerate);
+
   // FM Synth
   Synthesizer fmSynthCarrier(440, samplerate);
-  Synthesizer fmSynthModular(880, samplerate);
+  Synthesizer fmSynthModular(440, samplerate);
   double fmRatio = 2;
 
   // create oscillators and choose waveforms
@@ -164,6 +162,7 @@ int main(int argc,char **argv)
   Oscillator* fmOscCarrier = fmSynthCarrier.chooseOsc(chooseWaveShape);
   Oscillator* fmOscModular = fmSynthModular.chooseOsc(chooseWaveShape);
 
+  // create melodyGenerators and generate 3 different melody's
   MelodyGenerator melody1;
   melody1.randomSeed();
   melody1.generateScale(1, 72);
@@ -179,7 +178,8 @@ int main(int argc,char **argv)
      jack_default_audio_sample_t *outBuf, jack_nframes_t nframes) {
 
     for(unsigned int i = 0; i < nframes; i++) {
-      outBuf[i] = (oscLeadSynth->getSample()* 0.2) + (oscBassSynth->getSample() * 0.5 ) + ((fmOscCarrier->getSample() * fmOscModular->getSample())/4);
+      outBuf[i] = (oscLeadSynth->getSample()* 0.2) + (oscBassSynth->getSample() * 0.4 )
+                    + ((fmOscCarrier->getSample() * fmOscModular->getSample())/4);
       oscLeadSynth->setFrequency(leadSynth.getFrequency());
       oscBassSynth->setFrequency(bassSynth.getFrequency());
       fmOscCarrier->setFrequency(fmSynthCarrier.getFrequency());
@@ -196,7 +196,7 @@ int main(int argc,char **argv)
         fmOscModular->tick();
       }
 
-      // count+=1 every 255 nFrames
+      // count+=1 every 255 nFrames (this is roughly every 5.7 milliseconds)
       if(i == 255){
         clock1 += 1;
         clock2 += 1;
@@ -206,19 +206,16 @@ int main(int argc,char **argv)
         if (clock1 == clockTime1){
           clock1 = 0;
           double newFrequency = melody1.generateMelody();
-          std::cout << "New frequency: " << newFrequency << "\n";
           leadSynth.setFrequency(newFrequency);
         }
         if (clock2 == clockTime2){
           clock2 = 0;
           double newFrequency = melody2.generateMelody();
-          std::cout << "New frequency: " << newFrequency << "\n";
           bassSynth.setFrequency(newFrequency);
         }
         if (clock3 == clockTime3){
           clock3 = 0;
           double newFrequency = melody3.generateMelody();
-          std::cout << "New frequency: " << newFrequency << "\n";
           fmSynthCarrier.setFrequency(newFrequency);
           fmSynthModular.setFrequency(newFrequency*fmRatio);
         }

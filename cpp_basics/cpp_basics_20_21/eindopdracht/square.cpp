@@ -17,5 +17,5 @@ void Square::calculate() {
   for(int i=1; i<50; i = i+2){
     y += (sin(M_PI * 2 * phase * i)/i);
   }
-  sample = y;
+  sample = y * 0.5;
 }
