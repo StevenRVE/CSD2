@@ -13,8 +13,6 @@ public:
   // go to next sample
   void calculate();
 
-  //getters and setters
-
 private:
 
 };

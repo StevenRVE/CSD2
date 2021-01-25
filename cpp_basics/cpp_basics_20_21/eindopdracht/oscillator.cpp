@@ -19,17 +19,14 @@ Oscillator::~Oscillator() {
 
 // go to next sample
 void Oscillator::tick(){
-  // TODO - frequency / samplerate can be implemented in a more efficient way
   phase += frequency / samplerate;
   calculate();
   if (phase >= 1){
     phase = 0;
   }
-  // std::cout << "phase = " << phase << "\n";
 }
 
 //getters and setters //
-
 double Oscillator::getFrequency()
 {
   return frequency;

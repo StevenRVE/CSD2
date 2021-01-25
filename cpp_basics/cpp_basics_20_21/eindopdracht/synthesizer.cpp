@@ -1,11 +1,5 @@
 #include "synthesizer.h"
 
-/*
-to do list:
-- setting frequency changes osc frequency
-- add function to choose amount of voices
-*/
-
 // constructor
 Synthesizer::Synthesizer(double frequency, double samplerate)
 {
@@ -30,7 +24,6 @@ void Synthesizer::setFrequency(double frequency) {
 
 // methods
 Oscillator* Synthesizer::chooseOsc(int i){
-  // std::cout << "freq is = " << getFrequency() << std::endl;
   Oscillator* osc = nullptr;
 
   if(i == 1){

@@ -9,14 +9,11 @@ public:
   //Constructor and destructor
   Saw(float frequency, double samplerate);
   ~Saw();
-
+  
   // go to next sample
   void calculate();
 
-  //getters and setters
-
 private:
-// int overtonesAmount;
 };
 
 #endif

@@ -15,5 +15,3 @@ Sine::~Sine() {
 void Sine::calculate() {
   sample = amplitude * sin(M_PI * 2 * phase);
 }
-
-//getters and setters

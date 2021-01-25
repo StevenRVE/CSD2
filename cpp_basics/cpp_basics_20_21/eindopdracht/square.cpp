@@ -4,7 +4,6 @@
 Square::Square(float frequency, double samplerate)
 : Oscillator(frequency, samplerate)
 {
-  // VRAAG INITIALIZEMENT
   std::cout << "Square - constructor\n";
 }
 

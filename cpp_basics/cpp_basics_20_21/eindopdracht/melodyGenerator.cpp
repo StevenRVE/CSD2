@@ -1,11 +1,7 @@
 #include <iostream>
-#include <time.h> /* time */
 #include <stdlib.h> /* srand, rand */
 #include <vector>
 #include <math.h>
-// #include <algorithm>
-#include <chrono>
-#include <thread>
 #include "melodyGenerator.h"
 #include "synthesizer.h"
 
@@ -50,7 +46,6 @@ double MelodyGenerator::randomFrequency(){
   int randomNumber = rand() % 7;
   newFrequency = newScale.at(randomNumber);
   return newFrequency;
-  // std::cout << scale.at(randomNumber) << "\n";
 }
 
 double MelodyGenerator::mtof(int midiValue){
